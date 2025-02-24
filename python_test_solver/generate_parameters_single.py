@@ -3,7 +3,7 @@ import os
 import json
 import itertools
 from datetime import datetime
-import pandas as pd
+#import pandas as pd
 import shutil
 import argparse
 
@@ -45,12 +45,12 @@ for k,v in hyperparam[0].items():
 
 with open('submission_script.sh','w') as fh:
     fh.writelines("#!/bin/bash\n")
-    fh.writelines("#SBATCH --nodes=4\n")
-    fh.writelines("#SBATCH --ntasks-per-node=25\n")
+    fh.writelines("#SBATCH --nodes=1\n")
+    fh.writelines("#SBATCH --ntasks-per-node=1\n")
     fh.writelines("#SBATCH --cpus-per-task=1\n")
 #    fh.writelines("#SBATCH --gres=gpu:1\n")
     fh.writelines("#SBATCH --time=1:00:00\n")
-    fh.writelines("module load intel/19.0.5  intel-mpi/2019.5.281 intel-mkl/2019.5.281  hdf5/1.10.6-mpi  petsc/3.13.1-mpi\n")
+    fh.writelines("module load gcc openmpi petsc\n")
 #    fh.writelines("export LD_LIBRARY_PATH=/home/peyberne/tools/petscbis/lib:${LD_LIBRARY_PATH}\n")
 
     fh.writelines("generate_benchmark(){\n")
@@ -63,7 +63,7 @@ with open('submission_script.sh','w') as fh:
     fh.writelines("EOF\n")
     fh.writelines("   cp mat rhs sol $1\n")
     fh.writelines("   cd $1\n")
-    fh.writelines("   srun /home/peyberne/Codes/solver_miniapp/solver_for_petsc_param/build_helvetios_intel/miniapp_solver -mat mat -rhs rhs -sol sol > log\n")
+    fh.writelines("   srun /scratch/peyberne/petsc_miniapp/solver_for_petsc_param/build/miniapp_solver -mat mat -rhs rhs -sol sol > log\n")
     fh.writelines("   rm mat rhs sol $1\n")
     fh.writelines("   cd ..\n")
     fh.writelines("}\n")
