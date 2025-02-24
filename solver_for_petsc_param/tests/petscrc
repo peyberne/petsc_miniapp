@@ -1,0 +1,3 @@
+-ksp_type bcgs
+-pc_type gamg
+-ksp_rtol 1e-5

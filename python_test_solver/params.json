@@ -1,0 +1,16 @@
+{
+    "-ksp_rtol": ["1e-8"],
+    "-pc_type" : ["richardson", "chebyshev", "cg", "groppcg", "pipecg", "pipecgrr", 
+        "pipelcg", "pipeprcg", "pipecg2", "cgne", "nash", "stcg", "gltr", "fcg",
+        "pipefcg", "gmres", "pipefgmres", "fgmres", "lgmres", "dgmres", "pgmres",
+        "tcqmr", "bcgs", "ibcgs", "fbcgs", "fbcgsr", "bcgsl", "pipebcgs", "cgs", 
+        "tfqmr", "cr", "pipecr", "lsqr", "preonly", "qcg", "bicg", "minres", 
+        "symmlq", "lcd", "python", "gcr", "pipegcr", "tsirm", "cgls", 
+        "fetidp", "hpddm"],
+    "-ksp_type" : ["richardson", "chebyshev", "cg", "groppcg", "pipecg", "pipecgrr", "pipelcg", "pipeprcg", 
+        "pipecg2", "cgne", "nash", "stcg", "gltr", "fcg", "pipefcg", "gmres", "pipefgmres", 
+        "fgmres", "lgmres", "dgmres", "pgmres", "tcqmr", "bcgs", "ibcgs", "fbcgs", "fbcgsr", 
+        "bcgsl", "pipebcgs", "cgs", "tfqmr", "cr", "pipecr", "lsqr", "preonly", "qcg", "bicg", 
+        "minres", "symmlq", "lcd", "python", "gcr", "pipegcr", "tsirm", "cgls", "fetidp", "hpddm"],
+    "-ksp_inital_guess_nonzero": ["yes"]
+}

@@ -1,0 +1,7 @@
+
+{
+    "-ksp_rtol": ["1e-5"],
+    "-pc_type" : ["hypre", "gamg", "sor", "gasm", "asm", "bjacobi","jacobi","pbjacobi","vpbjacobi"],
+    "-ksp_type" : ["gmres", "bcgs", "fgmres", "lgmres", "dgmres", "pgmres", "fbcgs", "cg", "bcgsl", "cgs", "fbcgsr"],
+    "-ksp_inital_guess_nonzero": ["yes"]
+}
