@@ -5,7 +5,7 @@ program miniapp_solver
     use petscmat
     use iso_c_binding
     implicit none
-    character*(128)  mat0_file, rhs0_file, mat1_file, rhs1_file, which
+    character*(128)  mat0_file, rhs0_file, sol0_file, which
     character(kind=c_char,len=128) solver_type
     PetscViewer      fd
     PetscBool flg
@@ -14,7 +14,7 @@ program miniapp_solver
     integer ierr, nprocs, color, key, rank
     KSP :: ksp
     Mat :: A
-    Vec :: lhs, rhs_petsc, rhs_amgx, x, lhs_petsc
+    Vec :: rhs_petsc, rhs_amgx, lhs_petsc, sol_petsc
     integer(c_long_long) :: mataddr, rhs_addr, lhs_addr
     double precision :: t1, t2, mal
     double precision :: info(MAT_INFO_SIZE)
@@ -42,6 +42,8 @@ program miniapp_solver
         PETSC_NULL_CHARACTER,'-mat',mat0_file,flg,ierr);CHKERRA(ierr)
     call PetscOptionsGetString(PETSC_NULL_OPTIONS,&
         PETSC_NULL_CHARACTER,'-rhs',rhs0_file,flg,ierr);CHKERRA(ierr)
+    call PetscOptionsGetString(PETSC_NULL_OPTIONS,&
+        PETSC_NULL_CHARACTER,'-sol',sol0_file,flg,ierr);CHKERRA(ierr)
 
     call MPI_Comm_Size(MPI_COMM_WORLD, nprocs, ierr)
     call MPI_Comm_Rank(MPI_COMM_WORLD, rank, ierr)
@@ -64,14 +66,16 @@ program miniapp_solver
     call VecNorm(rhs_petsc,NORM_INFINITY,normRHS,ierr)
 !     print *, 'Norm of RHS:', normRHS
 
-    call VecDuplicate(rhs_petsc,lhs,ierr)
-    call VecSetFromOptions(lhs, ierr)
-    call VecDuplicate(rhs_petsc,x,ierr)
-    call VecSetFromOptions(x, ierr)
-    call VecDuplicate(rhs_petsc,rhs_amgx,ierr)
-    call VecSetFromOptions(rhs_amgx, ierr)
+    call PetscViewerBinaryOpen(MPI_COMM_WORLD,sol0_file,FILE_MODE_READ,fd,ierr);
+    call VecCreate(MPI_COMM_WORLD,sol_petsc,ierr)
+    call VecSetFromOptions(sol_petsc, ierr)
+    call VecLoad(sol_petsc,fd,ierr)
+    call PetscViewerDestroy(fd,ierr)
+    call VecNorm(sol_petsc,NORM_INFINITY,normSol,ierr)
+!     print *, 'Norm of RHS:', normRHS
+
     call VecDuplicate(rhs_petsc,lhs_petsc,ierr)
-    call VecSetFromOptions(lhs_petsc, ierr)
+    call VecSetFromOptions(rhs_petsc, ierr)
 
     ! solving with PETSC
     if(rank.eq.0) then
