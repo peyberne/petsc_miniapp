@@ -1,21 +1,19 @@
 #!/bin/bash
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
+#SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=1
-#SBATCH --gres=gpu:1
 #SBATCH --time=1:00:00
-module load   gcc/8.4.0-cuda  cuda mvapich2   cmake  fftw mumps superlu-dist
-export LD_LIBRARY_PATH=/home/peyberne/tools/petscbis/lib:${LD_LIBRARY_PATH}
+module load gcc openmpi petsc
 generate_benchmark(){
 cat <<EOF> $1/petscrc
--ksp_rtol 1e-8
+-ksp_rtol 1e-5
 -ksp_type $2
 -pc_type $3
--ksp_inital_guess_nonzero yes
+-ksp_inital_guess_nonzero no
 EOF
    cp mat rhs sol $1
    cd $1
-   srun /home/peyberne/Codes/solver_miniapp/solver_for_petsc_param/build_izar_gcc/miniapp_solver -mat mat -rhs rhs -sol sol > log
+   srun /scratch/peyberne/petsc_miniapp/solver_for_petsc_param/build/miniapp_solver -mat mat -rhs rhs -sol sol > log
    rm mat rhs sol $1
    cd ..
 }
